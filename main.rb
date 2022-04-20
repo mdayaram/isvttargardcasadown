@@ -4,7 +4,7 @@ require "http"
 get "/" do
   begin
     response = HTTP.head("https://vtt.asgard.casa/")
-    if response.code == 200
+    if response.code < 400
       return "VTT Asgard Casa is UP"
     else
       return "VTT Asgard Casa is DOWN"

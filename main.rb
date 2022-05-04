@@ -2,16 +2,23 @@ require "sinatra"
 require "http"
 
 get "/" do
-  body = ""
+  body = "VTT Asgard Casa is..."
   begin
     response = HTTP.head("https://vtt.asgard.casa/")
-    if response.code < 400
-      body = "VTT Asgard Casa is UP"
+    if response.status.redirect?
+      location = response.headers["Location"]
+      if location.start_with?("/auth")
+        body += "UP...but it's showing the Administrator screen."
+      elsif location.start_with?("/join") or location.start_with?("/game")
+        body += "UP!"
+      else
+        body += "DOWN"
+      end
     else
-      body = "VTT Asgard Casa is DOWN"
+      body += "DOWN"
     end
   rescue
-    body = "VTT Asgard Casa is DOWN"
+    body += "DOWN"
   end
 
   body += "\n\n<br/><br/>Source: https://github.com/mdayaram/isvttasgardcasadown"

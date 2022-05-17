@@ -2,25 +2,31 @@ require "sinatra"
 require "http"
 
 get "/" do
-  body = "VTT Asgard Casa is..."
+  header_start = "<html><head><title>"
+  header_end = "</title></head>"
+  body_start = "<body>"
+  body_end = "\n\n<br/><br/>"
+  body_end += "Source: <a href=\"https://github.com/mdayaram/isvttasgardcasadown\">"
+  body_end += "https://github.com/mdayaram/isvttasgardcasadown</a>"
+
+  status = "VTT Asgard Case is..."
   begin
     response = HTTP.head("https://vtt.asgard.casa/")
     if response.status.redirect?
       location = response.headers["Location"]
       if location.start_with?("/auth")
-        body += "UP...but it's showing the Administrator screen."
+        status += "UP...but it's showing the Administrator screen."
       elsif location.start_with?("/join") or location.start_with?("/game")
-        body += "UP!"
+        status += "UP!"
       else
-        body += "DOWN"
+        status += "DOWN"
       end
     else
-      body += "DOWN"
+      status += "DOWN"
     end
   rescue
-    body += "DOWN"
+    status += "DOWN"
   end
 
-  body += "\n\n<br/><br/>Source: https://github.com/mdayaram/isvttasgardcasadown"
-  return body
+  return header_start + status + header_end + body_start + status + body_end
 end

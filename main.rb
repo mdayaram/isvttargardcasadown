@@ -14,9 +14,10 @@ get "/" do
     response = HTTP.head("https://vtt.asgard.casa/")
     if response.status.redirect?
       location = response.headers["Location"]
-      if location.start_with?("/auth")
-        status += "UP...but it's showing the Administrator screen."
-      elsif location.start_with?("/join") or location.start_with?("/game")
+      if location.include?("/auth")
+        status += "UP...(but it's showing the Administrator screen)"
+        status += "<br/>Tony: This means \"Waiting for DM to start the game.\""
+      elsif location.include?("/join") or location.include?("/game")
         status += "UP!"
       else
         status += "DOWN"
